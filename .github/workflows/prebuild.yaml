@@ -65,34 +65,11 @@ jobs:
         run: . prebuild/tarball.sh
 
       - name: Upload
-        uses: actions/github-script@0.9.0
+        uses: actions/upload-artifact@v3
         with:
-          script: |
-            const fs = require("fs");
-            const assetName = "${{ steps.make_bundle.outputs.asset_name }}";
-            const tagName = process.env.UPLOAD_TO || process.env.CANVAS_VERSION_TO_BUILD;
-            const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
-
-            const releases = await github.repos.listReleases({owner, repo});
-            const release = releases.data.find(r => r.tag_name === tagName);
-            if (!release)
-              throw new Error(`Tag ${tagName} not found. Did you make the GitHub release?`);
-
-            const oldAsset = release.assets.find(a => a.name === assetName);
-            if (oldAsset)
-              await github.repos.deleteReleaseAsset({owner, repo, asset_id: oldAsset.id});
-
-            // (This is equivalent to actions/upload-release-asset. We're
-            // already in a script, so might as well do it here.)
-            const r = await github.repos.uploadReleaseAsset({
-              url: release.upload_url,
-              headers: {
-                "content-type": "application/x-gzip",
-                "content-length": `${fs.statSync(assetName).size}`
-              },
-              name: assetName,
-              data: fs.readFileSync(assetName)
-            });
+          name: ${{ steps.make_bundle.outputs.asset_name }}
+          path: ${{ steps.make_bundle.outputs.asset_name }}
+          if-no-files-found: error
 
   macOS:
     strategy:
@@ -131,34 +108,11 @@ jobs:
         run: . prebuild/tarball.sh
 
       - name: Upload
-        uses: actions/github-script@0.9.0
+        uses: actions/upload-artifact@v3
         with:
-          script: |
-            const fs = require("fs");
-            const assetName = "${{ steps.make_bundle.outputs.asset_name }}";
-            const tagName = process.env.UPLOAD_TO || process.env.CANVAS_VERSION_TO_BUILD;
-            const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
-
-            const releases = await github.repos.listReleases({owner, repo});
-            const release = releases.data.find(r => r.tag_name === tagName);
-            if (!release)
-              throw new Error(`Tag ${tagName} not found. Did you make the GitHub release?`);
-
-            const oldAsset = release.assets.find(a => a.name === assetName);
-            if (oldAsset)
-              await github.repos.deleteReleaseAsset({owner, repo, asset_id: oldAsset.id});
-
-            // (This is equivalent to actions/upload-release-asset. We're
-            // already in a script, so might as well do it here.)
-            const r = await github.repos.uploadReleaseAsset({
-              url: release.upload_url,
-              headers: {
-                "content-type": "application/x-gzip",
-                "content-length": `${fs.statSync(assetName).size}`
-              },
-              name: assetName,
-              data: fs.readFileSync(assetName)
-            });
+          name: ${{ steps.make_bundle.outputs.asset_name }}
+          path: ${{ steps.make_bundle.outputs.asset_name }}
+          if-no-files-found: error
 
   Win:
     strategy:
@@ -206,31 +160,8 @@ jobs:
         run: msys2do UPLOAD_TO=${{ env.UPLOAD_TO }} CANVAS_VERSION_TO_BUILD=${{ env.CANVAS_VERSION_TO_BUILD}} . prebuild/tarball.sh
 
       - name: Upload
-        uses: actions/github-script@0.9.0
+        uses: actions/upload-artifact@v3
         with:
-          script: |
-            const fs = require("fs");
-            const assetName = "${{ steps.make_bundle.outputs.asset_name }}";
-            const tagName = process.env.UPLOAD_TO || process.env.CANVAS_VERSION_TO_BUILD;
-            const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
-
-            const releases = await github.repos.listReleases({owner, repo});
-            const release = releases.data.find(r => r.tag_name === tagName);
-            if (!release)
-              throw new Error(`Tag ${tagName} not found. Did you make the GitHub release?`);
-
-            const oldAsset = release.assets.find(a => a.name === assetName);
-            if (oldAsset)
-              await github.repos.deleteReleaseAsset({owner, repo, asset_id: oldAsset.id});
-
-            // (This is equivalent to actions/upload-release-asset. We're
-            // already in a script, so might as well do it here.)
-            const r = await github.repos.uploadReleaseAsset({
-              url: release.upload_url,
-              headers: {
-                "content-type": "application/x-gzip",
-                "content-length": `${fs.statSync(assetName).size}`
-              },
-              name: assetName,
-              data: fs.readFileSync(assetName)
-            });
+          name: ${{ steps.make_bundle.outputs.asset_name }}
+          path: ${{ steps.make_bundle.outputs.asset_name }}
+          if-no-files-found: error
