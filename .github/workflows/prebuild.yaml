@@ -140,12 +140,6 @@ jobs:
     env:
       CANVAS_VERSION_TO_BUILD: ${{ matrix.canvas_tag }}
     steps:
-      # TODO drop when https://github.com/actions/virtual-environments/pull/632 lands
-      - uses: numworks/setup-msys2@v1
-        with:
-          update: true
-          path-type: inherit
-
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
