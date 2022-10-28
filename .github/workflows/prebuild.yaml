@@ -25,7 +25,7 @@ on:
         description: >-
           An array of the set of Canvas tags to build.
           Usually this is a single tag, but can be an array when a new version of Node.js is released and older versions of Canvas need to be built.
-          e.g. "[]"
+          e.g. [v2.6.1]
         required: true
         type: string
 
